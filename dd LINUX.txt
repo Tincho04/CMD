@@ -1,0 +1,181 @@
+sintaxis general del comando dd es:
+
+# dd if=$input_data of=$output_data [options]
+
+input_data y output_data pueden ser discos, particiones, archivos, dispositivos… principalmente todo lo que usted pueda escribir a o leer de. 
+se puede usar dd en un contexto de red para enviar flujos de datos a través de su LAN, por ejemplo. 
+se puede tener solamente la parte de entrada (input) en su comando dd, o solamente el comando de salida (output), y puede incluso eliminar ambos en algunos casos. 
+
+Ejemplos:
+dd if=/dev/urandom of=/dev/sda bs=4k -» Llena el disco con datos aleartorios
+
+dd if=/dev/sda of=/dev/sdb bs=4096 -» Duplicación disco-a-disco
+
+dd if=/dev/zero of=/dev/sda bs=4k -» Limpia un disco duro (puede necesitar ser repetido)
+
+dd if=inputfile of=/dev/st0 bs=32k conv=sync -» Copia de archivo a dispositivo de cinta
+
+dd if=/dev/st0 of=outfile bs=32k conv=sync -» El anterior, invertido
+
+dd if=/dev/sda | hexdump -C | grep [^00] -» Verifica si el disco está realmente puesto a cero
+
+dd if=/dev/urandom of=/home/$user/hugefile bs=4096 -» Llena una partición (¡Cuidado con las particiones de sistema!)
+
+dd if=/dev/urandom of=myfile bs=6703104 count=1 -» Codifica un archivo (tal vez antes de borrarlo)
+
+dd if=/dev/sda3 of=/dev/sdb3 bs=4096 conv=notrunc,noerror -» Copia una partición hacia otra partición
+
+dd if=/proc/filesystems | hexdump -C | less -» Visualiza los sistemas de ficheros disponibles
+
+dd if=/proc/partitions | hexdump -C | less -» Visualiza las particiones disponibles en kb
+
+dd if=/dev/sdb2 ibs=4096 | gzip > partition.image.gz conv=noerror -» Crea una imagen gzip de la segunda partición del segundo disco
+
+dd bs=10240 cbs=80 conv=ascii,unblock if=/dev/st0 of=ascii.out -» Copia el contenido de una cinta a un archivo, convirtiendo de EBCDIC a ASCII
+
+dd if=/dev/st0 ibs=1024 obs=2048 of=/dev/st1 -» Copia de un dispositivo de bloques de 1KB a un dispositivo de bloques de 2KB
+
+dd if=/dev/zero of=/dev/null bs=100M count=100
+100+0 records in
+100+0 records out
+10485760000 bytes (10 GB) copied,
+
+5.62955 s, 1.9 GB/s
+
+Copia 10 GB de ceros a la papelera de reciclaje.
+
+dd if=/dev/zero of=/dev/sda bs=512 count=2
+fdisk -s /dev/sda
+dd if=/dev/zero of=/dev/sda seek=(number_of_sectors – 20) bs=1k
+
+Borra GPT del disco. Como GPT escribe los datos al principio
+Y al final del disco, después de borrar desde el principio, tenemos que encontrar el número de sectores (el segundo comando), y entonces borrar los 20 últimos sectores.
+
+dd if=/home/$user/bootimage.img of=/dev/sdc -» Crea un disco UDB booteable (mostrado aquí como /dev/sdc)
+
+dd if=/dev/sda of=/dev/null bs=1m -» Una buena manera de buscar bloques malos. Relacionados con respaldos y sistemas
+
+dd if=/dev/sda of=/dev/fd0 bs=512 count=1 -» Copia el MBR a un disco flexible
+
+dd if=/dev/sda1 of=/dev/sdb1 bs=4096 -» Duplicación disco-a-disco
+
+dd if=/dev/sr0 of=/home/$user/mycdimage.iso\ bs=2048 conv=nosync -» Crea una imagen de un CD
+
+mount -o loop /home/$user/mycdimage.iso /mnt/cdimages/ -» Monta localmente la imagen mencionada
+
+dd if=/dev/sda of=/dev/sdb bs=64k conv=sync -» Útil cuando se reemplaza un disco por otro de idéntico tamaño.
+
+dd if=/dev/sda2 of=/home/$user/hddimage1.img bs=1M count=4430
+dd if=/dev/sda2 of=/home/$user/hddimage2.img bs=1M count=8860
+[…]
+
+Crea imágenes en DVD de una partición (útil para hacer respaldos)
+
+dd if=/$location/hddimage1.img of=/dev/sda2 bs=1M
+dd if=/$location/hddimage2.img of=/dev/sda2 seek=4430 bs=1M
+dd if=/$location/hddimage3.img of=/dev/sda2 seek=8860 bs=1M
+[etc…]
+
+Restaura del respaldo anterior
+
+dd if=/dev/zero count=1 bs=1024 seek=1 of=/dev/sda6 -» Destruye el superbloque
+
+dd if=/dev/zero count=1 bs=4096 seek=0 of=/dev/sda5 -» Otra forma de destruir el superbloque
+
+dd if=/home/$user/suspicious.doc | clamscan -» Verifica el archivo en busca de virus (necesita ClamAV)
+
+dd if=/home/$user/binary file | hexdump -C | less -» Ver el contenido de un archivo binario (necesita hexdump)
+
+dd if=/home/$user/bigfile of=/dev/null
+dd if=/dev/zero of=/home/$user/bigfile bs=1024 count=1000000
+
+Realiza un benchmark de la velocidad de lectura/escritura del disco duro
+
+dd if=/dev/sda of=/dev/sda -» Da nueva vida a viejos discos duros que no han sido usados por un tiempo (los discos deben estar “unmounted”)
+
+dd if=/dev/mem | strings | grep ‘string_to_search’ -» Examina el contenido de la memoria (legible para humanos, es decir)
+
+dd if=/dev/fd0 of=/home/$user/floppy.image bs=2x80x18b conv=notrunc -» Copia un disco flexible
+
+dd if=/proc/kcore | hexdump -C | less -» Muestra la memoria virtual
+
+dd if=/proc/filesystems | hexdump -C | less -» Visualiza los sistemas de ficheros disponibles
+
+dd if=/proc/kallsyms | hexdump -C | less -» Muestra los módulos cargados
+
+dd if=/proc/interrupts | hexdump -C | less -» Muestra la tabla de interrupciones
+
+dd if=/proc/uptime | hexdump -C | less -» Muestra el tiempo de actividad en segundos
+
+dd if=/proc/partitions | hexdump -C | less -» Visualiza las particiones disponibles en kb
+
+dd if=/proc/meminfo | hexdump -C | less -» Muestra el estado de la memoria
+
+dd if=/dev/urandom of=/home/$user/myrandom bs=100 count=1 -» Crea un archivo de 1kb de jerigonza aleatoria
+
+dd if=/dev/mem of=/home/$user/mem.bin bs=1024 -» Crea una imagen del estado actual de la memoria del sistema
+
+dd if=/home/$user/myfile -» Imprime el archivo a stdout
+
+dd if=/dev/sda2 bs=16065 | hexdump -C | grep ‘text_to_search’ -» Busca una cadena en una partición entera; incluso si está asegurada, usted puede bootear un liveCD
+
+dd if=/home/$user/file.bin skip=64k bs=1 of=/home/$user/convfile.bin -» Copia file.bin a convfile.bin saltándose los primeros 64 kb
+
+dd if=/home/$user/bootimage.img of=/dev/sdc -» Crea un disco UDB booteable (mostrado aquí como /dev/sdc)
+
+dd if=/dev/mem bs=1k skip=768 count=256 2>/dev/null | strings -n 8 -» Lee la BIOS.
+
+dd bs=1k if=imagefile.nrg of=imagefile.iso skip=300k -» Convierte una imagen de Nero en una imagen ISO estándar.
+Esto es posible porque la única diferencia entre las dos son los 300 kB de encabezamiento que Nero adiciona a una imagen ISO estándar.
+
+echo -n “hello vertical world” | dd cbs=1 conv=unblock 2> /dev/null -» Inténtalo, es seguro. 🙂
+
+dd if=/dev/sda1 | gzip -c | split -b 2000m – \ /mnt/hdc1/backup.img.gz -» Crea una imagen gzip de una partición utilizando división
+
+cat /mnt/hdc1/backup.img.gz.* | gzip -dc | dd of=/dev/sda1 -» Restaura el respaldo anterior
+
+dd if=/dev/zero of=myimage bs=1024 count=10240 -» Crea una imagen vacía del disco
+
+dd ibs=10 skip=1 -» Divide los primeros 10 bytes de stdin
+
+dd bs=265b conv=noerror if=/dev/st0 of=/tmp/bad.tape.image -» Hace una imagen de una cinta con sitios malos
+
+dd if=/dev/sda count=1 | hexdump -C -» Visualiza su MBR
+
+dd if=/dev/sda | nc -l 10001 nc $system_to_backup_IP 10001 | dd of=sysbackupsda.img -» Respaldo rápido de la red usando netcat
+
+dd if=/dev/zero of=/dev/sdX bs=1024000 count=1 -» Limpia los primeros 10MB de la partición
+
+dd if=/dev/zero of=tmpswap bs=1k
+count=1000000
+chmod 600 tmpswap
+mkswap tmpswap
+swapon tmpswap
+
+Crea un espacio temporal de intercambio
+
+dd if=/dev/sda of=/dev/null bs=1024k count=1024
+1073741824 bytes (1.1 GB) copied,
+24.1684 s, 44.4 MB/s
+
+Determina la velocidad secuencial de I/O de su disco.
+
+dd if=/dev/random count=1 2>/dev/null | od -t u1 |\ awk ‘{ print $2}’ | head -1 -» Genera un número aleatorio
+
+dd if=/dev/mem of=myRAM bs=1024 -» Copia la memoria RAM hacia un archivo
+
+dd if=/dev/sda bs=512 count=1 | od -xa -» Ver el contenido de su MBR en formato hex y ASCII
+
+dd if=/my/old/mbr of=/dev/sda bs=446 count=1 -» Restaura el MBR sin alterar el registro de la tabla de partición el cual está entre 447 – 511 bytes
+
+dd if=/dev/sda1 | split -b 700m – sda1-image -» Crea una copia de la partición y salva imágenes donde el tamaño máximo del volumen es 700MB
+
+ls -l | dd conv=ucase -» Convierte la salida de un comando en mayúsculas
+
+echo “MY UPPER CASE TEXT” | dd conv=lcase -» Convierte cualquier texto a minúsculas
+
+dd if=/etc/passwd cbs=132 conv=ebcdic of=/tmp/passwd.ebcdic -» Convierte el archivo de contraseñas del sistema a un archivo de longitud fija de formato EBCDIC
+
+dd if=text.ascii of=text.ebcdic conv=ebcdic -» Convierte de ASCII a EBCDIC
+
+dd if=myfile of=myfile conv=ucase -» Convierte un archivo a mayúsculas (simple SED o reemplazo tr)
