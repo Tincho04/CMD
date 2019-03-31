@@ -96,9 +96,17 @@ en caso de solicitar datos del usuario git:
 git config --global user.name "nick del usuario"
 git config --global user.email "mail del usuario"
 
+-------------------------------------------------------------------------------------------------------------------
 
+Eliminacion de carpeta en GIT
 
+rm -rf "Nombre de la carpeta"
 
+git add .
+
+git commit -m"carpeta removida"
+
+git push origin master || git push
 
 
 
