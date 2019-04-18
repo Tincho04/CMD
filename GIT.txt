@@ -108,6 +108,18 @@ git commit -m"carpeta removida"
 
 git push origin master || git push
 
+-------------------------------------------------------------------------------------------------------------------
+
+EN CASO DE QUERER CAMBIAR UN DOMINIO DE UN REPOSITORIO FORKEADO
+
+git clone --bare "link del repo forkeado"       //creo un clon del repo que forkee
+
+cd "nombre de la carpeta creada por clonacion"  //doy permiso master a esa carpeta
+
+git push --mirror "link del nuevo repo"         //creo el nuevo repo en github y asigno el link al push
+
+cd ..                                           //quito el permiso master y salgo de la carpeta fork 
+
 
 
 
