@@ -179,3 +179,99 @@ dd if=/etc/passwd cbs=132 conv=ebcdic of=/tmp/passwd.ebcdic -» Convierte el arc
 dd if=text.ascii of=text.ebcdic conv=ebcdic -» Convierte de ASCII a EBCDIC
 
 dd if=myfile of=myfile conv=ucase -» Convierte un archivo a mayúsculas (simple SED o reemplazo tr)
+
+
+
+Apuntes
+
+UGOA
+U: User
+G: Group
+O: Others
+A: All
+
+"chmod +x archivo01.txt" > Agrega X (ejecutable) a todos los permisos
+
+"chmod -R archivo01.txt" > Le saca el R (permiso de lectura) a todos los permisos
+
+"chmod u=-x, rw archivo01.txt" saca la x (ejecutable) a los permisos del usuario
+
+"chmod u=-x+rw archivo01.txt" saca la x (ejecutable) a los permisos del usuario
+
+"chown" Cambia el nombre del usuario obligatoriamente, y opcionalmente del grupo
+"chown Alumnos archivo01.txt" > cambia el nombre del dueño a Alumnos
+"chown alumnos:users archivo01.txt" > dueño = Alumnos, Grupo = Users
+"chgrp users archivo01.txt" > cambia el nombre del grupo a Users
+"chgrp" Cambia obligatoriamente el nombre del grupo
+
+"ls -l" > visualiza todo lo que estè dentro del DIR donde estoy parados
+
+chown nobody:users Carpeta
+
+chgrp nogroup Carpeta
+
+"MORE /ETC/PASSWD" > INFO DE LOS USUARIOS CREADOS 
+"GREP MARCOS /ETC/PASSWD" > BUSCA EL USUARIO MARCOS
+
+"useradd" 
+"-m" > crea el directorio 
+"-c" > comentario de un usuario 
+"-s" > shell que va a usar
+"-g" > grupo principal
+useradd -m -c "Usuario de Prueba" -s /bin/rbash prueba2
+
+rbash > Shell cortado o Enjaulado
+
+"passwd prueba2" > le agrega una contraseña a prueba2
+"grep prueba2 /etc/shadow" > me muestra el mètodo, el salto y la password de prueba2
+
+"login" > loguea, pide user y password
+
+miércoles, 19 de junio de 2019
+3 Particiones Primarias + 1(Cuarta) con lo que sobra y de ahì se generan lògicas
+4 particiones en total hasta 16
+
+3 primarias (Datos de SO, etc)
+1 extendidas (Datos que sobran de las primarias)
+12 logicas (uso de datos a partir de la extendida)
+
+fdisk -l /dev/sdb
+
+fdisk /dev/sdb 
+p > primario
+
+lvm
+pvcreate /dev(sdb1 /dev/sdc1 > crea el volumen fisico
+pvs > muestra los datos de los volumenes fisicos
+pvremove /dev/sdb1 > remueve un volumen fisico
+vgcreate vg00 /dev/sdb1 > crea nombre del volumen a la particiòn asignada
+vgs > muestra datos del volumen logico
+vgextend vg00 /dev/sdc1 > extiende el volumen de sdc1 a vg00 (sdb1) 
+vgreduce vg00 /dev/sdc1 > quita la particion sdc1 de la extencion vg00 (Pasa la informacion a uno de los discos que queda en la extencion)
+
+lsblk > arbol de discos y particiones
+lvcreate -L +30MB -n rrhh vg00 > crea el volumen logico "rrhh" de 30mb en vg00
+lvs > muestra el volumen logico
+lvextend -L +20MB /dev/vg00/cont > extiende cont de vg00 en 20mbs
+mkfs.ext4 /dev/vg00/cont > formatea el file system de la particion
+mkdir /rrh /cont > crea los directorios 
+mount /dev/vg00/rrhh /rrhh > monta el directorio rrhh
+mount /dev/vg00/cont /cont > monta el directorio cont
+
+lsblk > muestra particiones y puntos de montaje
+
+chown: grupo
+
+-m para crear directorio
+-s para crear el shell
+
+IF [ -z /etc/passwd ]; then
+echo "- si esta vacio"
+else
+echo "- no esta vacio" 
+fi
+
+
+
+
+
