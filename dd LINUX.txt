@@ -271,6 +271,65 @@ else
 echo "- no esta vacio" 
 fi
 
+RMDIR -P > Elimina directorios vacíos y el parent
+
+Clear / Ctrl+L > limpia la pantalla
+
+Grep(Búsqueda)
+Egrep(Búsqueda Extendida)
+
+grep -i 'Root' Archivo.txt > busca en archivo.txt la palabra Root, el -i ignora mayusculas y minusculas
+
+grep '^$' /etc/passwd -> obtiene las lineas en blanco en la ruta donde se almacenan los usuarios
+
+grep -o 'RoOt' -> Busca la coincidencia exacta en la palabra
+
+grep '^ Hola' -> Busca Hola al principio de la oración
+
+grep 'Hola $' -> Busca Hola al final de la oración
+
+grep ^[a-z][A-Z][0-9] -> busca la combinación de una letra de la a a la z en minuscula, seguida de una letra de la a a la z en mayusculas y luego un numero entre el 0 y el 9. Ejemplo "aT9"
+
+grep [^a-z] -> busca que no empiece con minuscula
+
+grep [0-9]{4} \- [0-9]{4} -> busca cuatro números seguidos por un guión, y luego cuatro números más. Ejemplo: Número telefónico "1234-9876"
+
+grep [0-9]{1,4} -> busca de uno a cuatro números consecutivos.
+
+grep [a-zA-Z0-9._-]*\@ [a-zA-Z0-9._-]*\.[a-zA-Z]{2,3} -> busca un mail
+
+Comando SED (búsqueda y modificación)
+
+sed 's/Root/ROOT/' archivo1.txt -> cambia la palabra Root a ROOT en archivo1.txt
+
+sed 's/Root/ROOT/G archivo2.txt -> otorga permiso global al archivo2.txt
+
+USERADD user1 -> crea grupo y usuario con el nombre user1
+
+USERDEL userx -> elimina el userx
+
+GROUPADD grupo2 -> crea el grupo "grupo2"
+
+ADDUSER user9 -> crea el usuario "user9" sin generarle un grupo
+
+ADDUSER -g Alumnos Pipo -> crea el usuario "Pipo" en el grupo "Alumnos"
+
+USERMOD -G "Profesores" "Pipo" -> Mueve al usuario "Pipo" al grupo "Profesores"
+
+Particiones de Disco:
+
+FDISK /DEV/SDB
+N
+P
+1/2
+ENTER
++30MB
+
+PVCREATE /DEV/SDB
+
+
+
+
 
 
 
